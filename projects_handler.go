@@ -14,7 +14,19 @@ func (app *App) getAllProjects(w http.ResponseWriter, r *http.Request) {
 	app.Logger.Println("FunctionName: getAllProjects")
 	fmt.Print(&buf)
 	projects := []Project{}
-	app.DB.Find(&projects)
+	if err := app.DB.Find(&projects).Error; err != nil {
+		respondError(w, http.StatusInternalServerError, err.Error())
+		app.Logger.Println(err)
+		fmt.Print(&buf)
+		return
+	}
+	// tasks := []Task{}
+	// if err := app.DB.Model(&projects).Association("Tasks").Find(&tasks); err != nil {
+	// 	respondError(w, http.StatusInternalServerError, err.Error())
+	// 	app.Logger.Println(err)
+	// 	fmt.Print(&buf)
+	// 	return
+	// }
 	respondJson(w, http.StatusOK, projects)
 }
 

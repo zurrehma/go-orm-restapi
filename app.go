@@ -45,6 +45,9 @@ func (app *App) SetRoutes() {
 	app.SetHandler("/projects/{title}", app.getProject, "GET")
 	app.SetHandler("/projects/{title}", app.updateProject, "PUT")
 	app.SetHandler("/projects/{title}", app.deleteProject, "DELETE")
+
+	app.SetHandler("/projects/{title}/tasks", app.getAllTasks, "GET")
+	app.SetHandler("/projects/{title}/tasks", app.createTask, "POST")
 }
 
 func (app *App) SetHandler(path string, f func(w http.ResponseWriter, r *http.Request), method string) {
