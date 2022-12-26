@@ -103,7 +103,7 @@ func (app *App) deleteProject(w http.ResponseWriter, r *http.Request) {
 	if project == nil {
 		return
 	}
-	if err := app.DB.Delete(project).Error; err != nil {
+	if err := app.DB.Unscoped().Delete(project).Error; err != nil {
 		respondError(w, http.StatusInternalServerError, err.Error())
 		app.Logger.Println(err)
 		fmt.Print(&buf)

@@ -14,6 +14,7 @@ type DBConfig struct {
 }
 
 func GetConfig() *Config {
+
 	return &Config{
 		DB: &DBConfig{
 			Dialect:  "mysql",
