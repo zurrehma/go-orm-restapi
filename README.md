@@ -40,3 +40,4 @@ go build
 * Introduce Testing.
 * Support Authentication with user for securing the APIs.
 * Introduce CI/CD and security in pipelines.
+* Deploying this api behind proxy server using Nginx
