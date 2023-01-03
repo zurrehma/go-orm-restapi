@@ -35,9 +35,9 @@ go build
 ## Future Improvement
 * The empty struct for project and tasks handler doesn't look like a good approach. I will try to find the alternative solution for that.
 
-## TODO
-* Make Config file environment specific rather then hard coded values.
-* Introduce Testing.
-* Support Authentication with user for securing the APIs.
-* Introduce CI/CD and security in pipelines.
-* Deploying this api behind proxy server using Nginx
+## Feature TODO
+- [ ] Make Config file environment specific rather then hard coded values.
+- [ ] Introduce Testing.
+- [ ] Support Authentication with user for securing the APIs.
+- [ ] Introduce CI/CD and security in pipelines.
+- [ ] Deploying this api behind proxy server using Nginx
