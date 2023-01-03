@@ -1,4 +1,4 @@
-package main
+package handler
 
 import (
 	"encoding/json"
@@ -7,17 +7,22 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/zurrehma/go-orm-restapi/app"
+	"github.com/zurrehma/go-orm-restapi/app/model"
 	"gorm.io/gorm"
 )
 
-func (app *App) getAllProjects(w http.ResponseWriter, r *http.Request) {
+type ProjectHandler struct {
+}
+
+func (*ProjectHandler) GetAllObjects(app *app.App, w http.ResponseWriter, r *http.Request) {
 	app.Logger.Println("FunctionName: getAllProjects")
-	fmt.Print(&buf)
-	projects := []Project{}
+	fmt.Print(&app.Buf)
+	projects := []model.Project{}
 	if err := app.DB.Find(&projects).Error; err != nil {
 		respondError(w, http.StatusInternalServerError, err.Error())
 		app.Logger.Println(err)
-		fmt.Print(&buf)
+		fmt.Print(&app.Buf)
 		return
 	}
 	// tasks := []Task{}
@@ -30,16 +35,16 @@ func (app *App) getAllProjects(w http.ResponseWriter, r *http.Request) {
 	respondJson(w, http.StatusOK, projects)
 }
 
-func (app *App) createProject(w http.ResponseWriter, r *http.Request) {
+func (*ProjectHandler) CreateObject(app *app.App, w http.ResponseWriter, r *http.Request) {
 	app.Logger.Println("FunctionName: createProject")
-	fmt.Print(&buf)
-	project := Project{}
+	fmt.Print(&app.Buf)
+	project := model.Project{}
 	projectRequest := json.NewDecoder(r.Body)
 	err := projectRequest.Decode(&project)
 	if err != nil {
 		respondError(w, http.StatusBadRequest, err.Error())
 		app.Logger.Println(err)
-		fmt.Print(&buf)
+		fmt.Print(&app.Buf)
 		return
 	}
 	defer r.Body.Close()
@@ -47,15 +52,15 @@ func (app *App) createProject(w http.ResponseWriter, r *http.Request) {
 	if err := app.DB.Save(&project).Error; err != nil {
 		respondError(w, http.StatusInternalServerError, err.Error())
 		app.Logger.Println(err)
-		fmt.Print(&buf)
+		fmt.Print(&app.Buf)
 		return
 	}
 	respondJson(w, http.StatusCreated, project)
 }
 
-func (app *App) getProject(w http.ResponseWriter, r *http.Request) {
+func (*ProjectHandler) GetObject(app *app.App, w http.ResponseWriter, r *http.Request) {
 	app.Logger.Println("FunctionName: getProject")
-	fmt.Print(&buf)
+	fmt.Print(&app.Buf)
 	vars := mux.Vars(r)
 	title := vars["title"]
 	project := getProjectOR404(title, app.DB, w)
@@ -65,9 +70,9 @@ func (app *App) getProject(w http.ResponseWriter, r *http.Request) {
 	respondJson(w, http.StatusOK, project)
 }
 
-func (app *App) updateProject(w http.ResponseWriter, r *http.Request) {
+func (*ProjectHandler) UpdateObject(app *app.App, w http.ResponseWriter, r *http.Request) {
 	app.Logger.Println("FunctionName: updateProject")
-	fmt.Print(&buf)
+	fmt.Print(&app.Buf)
 	vars := mux.Vars(r)
 	title := vars["title"]
 	project := getProjectOR404(title, app.DB, w)
@@ -80,7 +85,7 @@ func (app *App) updateProject(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		respondError(w, http.StatusBadRequest, err.Error())
 		app.Logger.Println(err)
-		fmt.Print(&buf)
+		fmt.Print(&app.Buf)
 		return
 	}
 	defer r.Body.Close()
@@ -88,15 +93,15 @@ func (app *App) updateProject(w http.ResponseWriter, r *http.Request) {
 	if err := app.DB.Save(&project).Error; err != nil {
 		respondError(w, http.StatusInternalServerError, err.Error())
 		app.Logger.Println(err)
-		fmt.Print(&buf)
+		fmt.Print(&app.Buf)
 		return
 	}
 	respondJson(w, http.StatusOK, project)
 }
 
-func (app *App) deleteProject(w http.ResponseWriter, r *http.Request) {
+func (*ProjectHandler) DeleteObject(app *app.App, w http.ResponseWriter, r *http.Request) {
 	app.Logger.Println("FunctionName: deleteProject")
-	fmt.Print(&buf)
+	fmt.Print(&app.Buf)
 	vars := mux.Vars(r)
 	title := vars["title"]
 	project := getProjectOR404(title, app.DB, w)
@@ -106,15 +111,15 @@ func (app *App) deleteProject(w http.ResponseWriter, r *http.Request) {
 	if err := app.DB.Unscoped().Delete(project).Error; err != nil {
 		respondError(w, http.StatusInternalServerError, err.Error())
 		app.Logger.Println(err)
-		fmt.Print(&buf)
+		fmt.Print(&app.Buf)
 		return
 	}
 	respondJson(w, http.StatusNoContent, project)
 }
 
-func getProjectOR404(title string, db *gorm.DB, w http.ResponseWriter) *Project {
-	project := Project{}
-	if err := db.First(&project, Project{Title: title}).Error; err != nil {
+func getProjectOR404(title string, db *gorm.DB, w http.ResponseWriter) *model.Project {
+	project := model.Project{}
+	if err := db.First(&project, model.Project{Title: title}).Error; err != nil {
 		respondError(w, http.StatusNotFound, err.Error())
 		return nil
 	}

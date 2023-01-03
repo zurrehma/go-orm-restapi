@@ -1,4 +1,4 @@
-package main
+package model
 
 import (
 	"time"
@@ -21,7 +21,7 @@ type Task struct {
 	ProjectID uint      `json:"project_id"`
 }
 
-func dbMigrate(db *gorm.DB) *gorm.DB {
+func DBMigrate(db *gorm.DB) *gorm.DB {
 	db.AutoMigrate(&Project{}, &Task{})
 	return db
 }
